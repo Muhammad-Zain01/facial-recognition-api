@@ -7,14 +7,15 @@ from main import Registration
 from main import Detection
 import random
 
-model_name = 'models/TunnedModel.pickle'
+modelDir = 'models'
+model_name = f'{modelDir}/TunnedModel.pickle'
 root_path = os.path.join(__file__, os.path.dirname(__file__))
 temp_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
 temp_path2 = os.path.join(__file__, os.path.dirname(__file__))+"/temp2"
 
 if(not os.path.exists(f'{temp_path}')): os.mkdir(f'{temp_path}')
 if(not os.path.exists(f'{temp_path2}')): os.mkdir(f'{temp_path2}')
-if(not os.path.exists(f'{root_path}/{ct.MODEL_DIR}')): os.mkdir(f'{root_path}/{ct.MODEL_DIR}')
+if(not os.path.exists(f'{root_path}/{modelDir}')): os.mkdir(f'{root_path}/{modelDir}')
 
 app = Flask(__name__)
 CORS(app, origins='*', supports_credentials=True, allow_headers=['Content-Type', 'Authorization'])
