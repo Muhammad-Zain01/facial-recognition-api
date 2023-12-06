@@ -112,15 +112,9 @@ def checkUser():
     sResponse = json.dumps(aResponse)
     return sResponse
 
-
-   
     
     
-    elif bResult == 2:
-        print("user NOT DETECTED")
-        ResponseCode = 400
-        ResponseMessage = 'User Not Found'
-    elif bResult == 3:
+ 
         print("FACE NOT DETECTED")
         ResponseCode = 400
         ResponseMessage = 'Face Not Detected'
