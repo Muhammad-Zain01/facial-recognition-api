@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request
+from flask import Flask, request
 from flask_cors import CORS
 import base64
 import json
@@ -7,8 +7,8 @@ from main import Registration
 from main import Detection
 import random
 import contants as ct
-import numpy as np
 
+model_name = 'models/TunnedModel.pickle'
 root_path = os.path.join(__file__, os.path.dirname(__file__))
 temp_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
 temp_path2 = os.path.join(__file__, os.path.dirname(__file__))+"/temp2"
@@ -81,7 +81,6 @@ def Upload():
 @app.route('/register', methods=['POST'])
 def Register():
     path = request.form.get('path')
-    model_name = 'models/TunnedModel.pickle'
     RegistrationObject = Registration(model_name)
     RegistrationObject.Register(path)
 
@@ -99,8 +98,8 @@ def checkUser():
         image_bytes = base64.b64decode(base64_string)
         file.write(image_bytes)
         
-    AttendenceObject = Detection(temp_path2, model_name);
-    bResult = AttendenceObject.compareFaces(image_name)
+    DetectionObject = Detection(temp_path2, model_name);
+    bResult = DetectionObject.compareFaces(image_name)
     
     if(bResult): aResponse = {"Response" : "SUCCESS", "user" : bResult}
     else: aResponse = {"Response" : "NOT_FOUND"}
