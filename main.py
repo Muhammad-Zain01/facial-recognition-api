@@ -5,10 +5,8 @@ import os
 import pickle
 import shutil
 
-
 class Registration:
-    def __init__(self, path, model_name):
-        self.path = path
+    def __init__(self, model_name):
         self.modelName = model_name
         self.root = os.path.join(__file__,  os.path.dirname(__file__))
         self.model = f'{self.root}/{self.modelName}'
@@ -120,7 +118,7 @@ class Attendence:
             distances = face_recognition.face_distance(self.encodeListKnown, face_encoding)
             min_distance_index = np.argmin(distances)
             min_distance = distances[min_distance_index]
-            threshold = 0.37 # 63% Accuracy
+            threshold = 0.37 
             print(str(round((1 - float(min_distance)) * 100,2))+"% Accuracy")
             if min_distance <= threshold:
                 label = self.classNames[min_distance_index]
