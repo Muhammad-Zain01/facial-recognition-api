@@ -14,8 +14,11 @@ path, attendence_path, model_name = ct.TEMP_PATH, ct.TEMP_ATTENDENCE_PATH, ct.MO
 
 RegistrationObject = Registration(path, model_name)
 AttendenceObject = Attendence(attendence_path, model_name)
-root_path = os.path.join(__file__, os.path.dirname(__file__))
+root_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
 
+if(not os.path.exists(f'{root_path}')):
+    os.mkdir(f'{root_path}')
+    
 # print(AttendenceObject.classNames)
 
 # RegistrationObject.Register()
@@ -68,6 +71,23 @@ def remove_user():
     RegistrationObject.modelUpdate(newLabels, newEncodings)
     return json.dumps({'Response' : "SUCCESS"})
 
+@app.route('/upload', methods=['POST'])
+def Upload():
+    data = json.loads(request.form.get('data'))
+    name = data['name']
+    id = data['id']
+    base64_string = data['img']
+    img = base64_string.split(',', 1)[-1]
+    image = base64.b64decode(img)
+    
+    if(not os.path.exists(f'{root_path}/{id}')):
+        os.mkdir(f'{root_path}/{id}')
+    
+    with open(f'{root_path}/{id}/{name}_{id}.jpg', 'wb') as file:
+        file.write(image)
+    
+    return json.dumps({'Response' : "SUCCESS"})
+    
 @app.route('/register', methods=['POST'])
 def Register():
     AttendenceObject = Attendence(attendence_path, model_name)
@@ -78,6 +98,7 @@ def Register():
     base64_string = data['img']
     img = base64_string.split(',', 1)[-1]
     image = base64.b64decode(img)
+    
     
     if(not os.path.exists(f'{root_path}/{id}')):
         os.mkdir(f'{root_path}/{id}')
