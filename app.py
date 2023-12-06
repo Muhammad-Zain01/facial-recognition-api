@@ -2,17 +2,19 @@ from flask import Flask,render_template, request
 from flask_cors import CORS
 import base64
 import json
+import os
 from main import Registration
 from main import Attendence
 import random
 import contants as ct
 import numpy as np
 
-modal = 'TunnedModel_1.pickle'
+modal = 'TunnedModel.pickle'
 path, attendence_path, model_name = ct.TEMP_PATH, ct.TEMP_ATTENDENCE_PATH, ct.MODEL_DIR+'/'+modal
 
 RegistrationObject = Registration(path, model_name)
 AttendenceObject = Attendence(attendence_path, model_name)
+root_path = os.path.join(__file__, os.path.dirname(__file__))
 
 # print(AttendenceObject.classNames)
 
@@ -39,9 +41,9 @@ def remove_index(arr, remove_arr):
     data = [value for index, value in enumerate(arr) if index not in remove_arr]
     return data
 
-@app.route('/')
-def home():
-    return render_template('Register.html')
+# @app.route('/')
+# def home():
+#     return render_template('Register.html')
 
 @app.route('/trained_users', methods=['GET'])
 def trained_users():
@@ -69,19 +71,25 @@ def remove_user():
 @app.route('/register', methods=['POST'])
 def Register():
     AttendenceObject = Attendence(attendence_path, model_name)
-    print(len(AttendenceObject.classNames))
-    print(AttendenceObject.classNames)
+
     data = json.loads(request.form.get('data'))
     name = data['name']
     id = data['id']
     base64_string = data['img']
     img = base64_string.split(',', 1)[-1]
     image = base64.b64decode(img)
-    with open(f'{path}/{name}_{id}.jpg', 'wb') as file:
+    
+    if(not os.path.exists(f'{root_path}/{id}')):
+        os.mkdir(f'{root_path}/{id}')
+    
+    with open(f'{root_path}/{id}/{name}_{id}.jpg', 'wb') as file:
         file.write(image)
-    RegistrationObject.Register()
-    aReturn = {'ResponseMessage': "SUCCESS"}
-    return json.dumps(aReturn)
+    
+    
+    RegistrationObject.Register(id)
+    return "HERE"
+    # aReturn = {'ResponseMessage': "SUCCESS"}
+    # return json.dumps(aReturn)
 
 @app.route('/image', methods=['POST'])
 def process_form_data():
