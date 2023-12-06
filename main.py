@@ -3,6 +3,7 @@ import numpy as np
 import face_recognition
 import os
 import pickle
+import shutil
 
 
 class Registration:
@@ -10,6 +11,7 @@ class Registration:
         self.path = path
         self.modelName = model_name
         self.root = os.path.join(__file__,  os.path.dirname(__file__))
+        self.model = f'{self.root}/{self.modelName}'
         self.images = []
         self.image_labels = []
         self.classNames = []
@@ -17,15 +19,15 @@ class Registration:
         self.encodedData = False
 
     def checkModel(self):
-        if os.path.exists(f'{self.root}/{self.modelName}'):
+        if os.path.exists(self.model):
             self.bModel = True
-            with open(f'{self.root}/{self.modelName}', 'rb') as file:
+            with open(self.model, 'rb') as file:
                 self.encodedData = pickle.load(file)
 
     def getImages(self, path):
-        myList = os.listdir(f'{self.root}/{path}')
+        myList = os.listdir(f'{self.root}/temp/{path}')
         for cls in myList:
-            curImg = cv2.imread(f'{self.root}/{path}/{cls}')
+            curImg = cv2.imread(f'{self.root}/temp/{path}/{cls}')
             self.images.append(curImg)
             tarr = os.path.splitext(cls)[0].split('_')
             self.image_labels.append([tarr[0],tarr[1]])
@@ -44,19 +46,20 @@ class Registration:
             i += 1
         return encodelist
 
-    def Reset(self):
-        # self.removeDirs()
+    def Reset(self, path):
+        self.removeDirs(path)
         self.images = []
         self.classNames = []
         self.encodedData = []
         return True
 
-    def removeDirs(self):
-        myList = os.listdir(self.path)
-        for file_name in myList:
-            file_path = os.path.join(self.path, file_name)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
+    def removeDirs(self, path):
+        # myList = os.listdir(f'{self.root}/temp/{path}')
+        # for file_name in myList:
+        f'{self.root}/temp/{path}'
+        file_path = os.path.join(self.root, 'temp', path)
+        if os.path.isdir(file_path):
+            shutil.rmtree(file_path)
         return True
 
     def modelUpdate(self, classNames, encodeListKnown):
@@ -81,10 +84,10 @@ class Registration:
             encodeListKnown = oldFaceData
             self.classNames = oldClassNames
         
-        with open(f'{self.root}/{self.modelName}', 'wb') as file:
+        with open(self.model, 'wb') as file:
             pickle.dump([self.classNames, encodeListKnown], file)
 
-        # self.Reset()
+        self.Reset(path)
         return True
 
 class Attendence:
