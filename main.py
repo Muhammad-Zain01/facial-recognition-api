@@ -119,14 +119,13 @@ class Attendence:
             min_distance_index = np.argmin(distances)
             min_distance = distances[min_distance_index]
             threshold = 0.37 
-            print(str(round((1 - float(min_distance)) * 100,2))+"% Accuracy")
             if min_distance <= threshold:
                 label = self.classNames[min_distance_index]
-                return label
+                return label[0]
         if faceDetected:
-            return "FACE_DETECTED"
+            return True
         else:
-            return "FACE_NOT_DETECTED"
+            return False
 
     def FaceCam(self):
         facecam = cv2.VideoCapture(0)
@@ -179,6 +178,7 @@ class Attendence:
     def compareFaces(self, img):
         image = self.attendencePath+'/'+img
         Detection = self.DetectFace(image)
+        return Detection
         if Detection == 'FACE_DETECTED':
             return 2
         elif Detection == 'FACE_NOT_DETECTED':
