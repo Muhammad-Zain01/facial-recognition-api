@@ -113,13 +113,7 @@ def checkUser():
     return sResponse
 
 
-
-    User = ""
-    ResponseCode = 400
-    ResponseMessage = ""
-    Id = ''
-    User = ''
-    data = {}
+   
     
     if bResult == 1:
         if len(AttendenceObject.checkUser()) > 0:
