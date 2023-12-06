@@ -4,16 +4,11 @@ import base64
 import json
 import os
 from main import Registration
-from main import Attendence
+from main import Detection
 import random
 import contants as ct
 import numpy as np
 
-modal = 'TunnedModel.pickle'
-path, attendence_path, model_name = ct.TEMP_PATH, ct.TEMP_ATTENDENCE_PATH, ct.MODEL_DIR+'/'+modal
-
-RegistrationObject = Registration(model_name)
-AttendenceObject = Attendence(attendence_path, model_name)
 root_path = os.path.join(__file__, os.path.dirname(__file__))
 temp_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
 temp_path2 = os.path.join(__file__, os.path.dirname(__file__))+"/temp2"
@@ -22,51 +17,49 @@ if(not os.path.exists(f'{temp_path}')): os.mkdir(f'{temp_path}')
 if(not os.path.exists(f'{temp_path2}')): os.mkdir(f'{temp_path2}')
 if(not os.path.exists(f'{root_path}/{ct.MODEL_DIR}')): os.mkdir(f'{root_path}/{ct.MODEL_DIR}')
 
-# RegistrationObject.Register()
-# AttendenceObject.FaceCam()
 app = Flask(__name__)
 CORS(app, origins='*', supports_credentials=True, allow_headers=['Content-Type', 'Authorization'])
 
 # Helper Functions
-def get_unique_values_with_counts(arr):
-    unique_values, counts = np.unique(arr, return_counts=True)
-    unique_counts = dict(zip(unique_values, counts))
-    return unique_counts
+# def get_unique_values_with_counts(arr):
+#     unique_values, counts = np.unique(arr, return_counts=True)
+#     unique_counts = dict(zip(unique_values, counts))
+#     return unique_counts
 
-def get_user_index(arr, target):
-    index_arr = []
-    for i in range(len(arr)):
-        value = arr[i][1]
-        if(str(value) == str(target)):
-            index_arr.append(i)
-    return index_arr
+# def get_user_index(arr, target):
+#     index_arr = []
+#     for i in range(len(arr)):
+#         value = arr[i][1]
+#         if(str(value) == str(target)):
+#             index_arr.append(i)
+#     return index_arr
 
-def remove_index(arr, remove_arr):
-    data = [value for index, value in enumerate(arr) if index not in remove_arr]
-    return data
+# def remove_index(arr, remove_arr):
+#     data = [value for index, value in enumerate(arr) if index not in remove_arr]
+#     return data
 
-@app.route('/trained_users', methods=['GET'])
-def trained_users():
-    AttendenceObject = Attendence(attendence_path, model_name);
-    trainedUsers = (AttendenceObject.classNames)
-    array_2d = np.array([[1, 2, 3], [4, 2, 1], [3, 4, 2]])
-    unique_counts = get_unique_values_with_counts(trainedUsers)
-    trainedUsers = [x for i, x in enumerate(trainedUsers) if x not in trainedUsers[:i]]
-    return render_template('trained_users.html', users=[trainedUsers, unique_counts])
+# @app.route('/trained_users', methods=['GET'])
+# def trained_users():
+#     AttendenceObject = Detection(temp_path2, model_name);
+#     trainedUsers = (AttendenceObject.classNames)
+#     array_2d = np.array([[1, 2, 3], [4, 2, 1], [3, 4, 2]])
+#     unique_counts = get_unique_values_with_counts(trainedUsers)
+#     trainedUsers = [x for i, x in enumerate(trainedUsers) if x not in trainedUsers[:i]]
+#     return render_template('trained_users.html', users=[trainedUsers, unique_counts])
 
-@app.route('/remove_user', methods=['POST'])
-def remove_user():
-    data = request.get_json()
-    id = data['id']
-    AttendenceObject = Attendence(attendence_path, model_name)
-    Labels = AttendenceObject.classNames
-    EncodedData = AttendenceObject.encodeListKnown
-    index_to_remove = get_user_index(Labels, id)
+# @app.route('/remove_user', methods=['POST'])
+# def remove_user():
+#     data = request.get_json()
+#     id = data['id']
+#     AttendenceObject = Detection(temp_path2, model_name)
+#     Labels = AttendenceObject.classNames
+#     EncodedData = AttendenceObject.encodeListKnown
+#     index_to_remove = get_user_index(Labels, id)
 
-    newLabels = remove_index(Labels, index_to_remove)
-    newEncodings = remove_index(EncodedData, index_to_remove)
-    RegistrationObject.modelUpdate(newLabels, newEncodings)
-    return json.dumps({'Response' : "SUCCESS"})
+#     newLabels = remove_index(Labels, index_to_remove)
+#     newEncodings = remove_index(EncodedData, index_to_remove)
+#     RegistrationObject.modelUpdate(newLabels, newEncodings)
+#     return json.dumps({'Response' : "SUCCESS"})
 
 @app.route('/upload', methods=['POST'])
 def Upload():
@@ -88,7 +81,10 @@ def Upload():
 @app.route('/register', methods=['POST'])
 def Register():
     path = request.form.get('path')
+    model_name = 'models/TunnedModel.pickle'
+    RegistrationObject = Registration(model_name)
     RegistrationObject.Register(path)
+
     aReturn = {'Response': "SUCCESS"}
     return json.dumps(aReturn)
 
@@ -103,7 +99,7 @@ def checkUser():
         image_bytes = base64.b64decode(base64_string)
         file.write(image_bytes)
         
-    AttendenceObject = Attendence(temp_path2, model_name);
+    AttendenceObject = Detection(temp_path2, model_name);
     bResult = AttendenceObject.compareFaces(image_name)
     
     if(bResult): aResponse = {"Response" : "SUCCESS", "user" : bResult}
