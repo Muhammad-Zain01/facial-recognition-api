@@ -16,12 +16,11 @@ RegistrationObject = Registration(model_name)
 AttendenceObject = Attendence(attendence_path, model_name)
 root_path = os.path.join(__file__, os.path.dirname(__file__))
 temp_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
+temp_path2 = os.path.join(__file__, os.path.dirname(__file__))+"/temp2"
 
-if(not os.path.exists(f'{temp_path}')):
-    os.mkdir(f'{temp_path}')
-    
-if(not os.path.exists(f'{root_path}/{ct.MODEL_DIR}')):
-    os.mkdir(f'{root_path}/{ct.MODEL_DIR}')
+if(not os.path.exists(f'{temp_path}')): os.mkdir(f'{temp_path}')
+if(not os.path.exists(f'{temp_path2}')): os.mkdir(f'{temp_path2}')
+if(not os.path.exists(f'{root_path}/{ct.MODEL_DIR}')): os.mkdir(f'{root_path}/{ct.MODEL_DIR}')
 
 # RegistrationObject.Register()
 # AttendenceObject.FaceCam()
@@ -93,19 +92,28 @@ def Register():
     aReturn = {'Response': "SUCCESS"}
     return json.dumps(aReturn)
 
-@app.route('/check-user', methods=['POST'])
+@app.route('/check', methods=['POST'])
 def checkUser():
     image = request.form.get('img')
-    image_name = 'check_user.jpeg'
+    num = random.randint(1, 10000)
+    image_name = f'{num}.jpeg'
     
-    with open(f'{attendence_path}/{image_name}', 'wb') as file:
+    with open(f'{temp_path2}/{image_name}', 'wb') as file:
         base64_string = image.split(',', 1)[-1]
         image_bytes = base64.b64decode(base64_string)
         file.write(image_bytes)
         
-    AttendenceObject = Attendence(attendence_path, model_name);
+    AttendenceObject = Attendence(temp_path2, model_name);
     bResult = AttendenceObject.compareFaces(image_name)
     
+    if(bResult): aResponse = {"Response" : "SUCCESS", "user" : bResult}
+    else: aResponse = {"Response" : "NOT_FOUND"}
+    
+    sResponse = json.dumps(aResponse)
+    return sResponse
+
+
+
     User = ""
     ResponseCode = 400
     ResponseMessage = ""
