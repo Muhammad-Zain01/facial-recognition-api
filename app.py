@@ -14,11 +14,14 @@ path, attendence_path, model_name = ct.TEMP_PATH, ct.TEMP_ATTENDENCE_PATH, ct.MO
 
 RegistrationObject = Registration(path, model_name)
 AttendenceObject = Attendence(attendence_path, model_name)
-root_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
+root_path = os.path.join(__file__, os.path.dirname(__file__))
+temp_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
 
-if(not os.path.exists(f'{root_path}')):
-    os.mkdir(f'{root_path}')
+if(not os.path.exists(f'{temp_path}')):
+    os.mkdir(f'{temp_path}')
     
+if(not os.path.exists(f'{root_path}/{ct.MODEL_DIR}')):
+    os.mkdir(f'{root_path}/{ct.MODEL_DIR}')
 # print(AttendenceObject.classNames)
 
 # RegistrationObject.Register()
@@ -79,35 +82,19 @@ def Upload():
     base64_string = data['img']
     img = base64_string.split(',', 1)[-1]
     image = base64.b64decode(img)
+    random_digit = random.randint(1, 100)
+    if(not os.path.exists(f'{temp_path}/{id}')):
+        os.mkdir(f'{temp_path}/{id}')
     
-    if(not os.path.exists(f'{root_path}/{id}')):
-        os.mkdir(f'{root_path}/{id}')
-    
-    with open(f'{root_path}/{id}/{name}_{id}.jpg', 'wb') as file:
+    with open(f'{temp_path}/{id}/{name}_{id}{random_digit}.jpg', 'wb') as file:
         file.write(image)
     
     return json.dumps({'Response' : "SUCCESS"})
     
 @app.route('/register', methods=['POST'])
 def Register():
-    AttendenceObject = Attendence(attendence_path, model_name)
-
-    data = json.loads(request.form.get('data'))
-    name = data['name']
-    id = data['id']
-    base64_string = data['img']
-    img = base64_string.split(',', 1)[-1]
-    image = base64.b64decode(img)
-    
-    
-    if(not os.path.exists(f'{root_path}/{id}')):
-        os.mkdir(f'{root_path}/{id}')
-    
-    with open(f'{root_path}/{id}/{name}_{id}.jpg', 'wb') as file:
-        file.write(image)
-    
-    
-    RegistrationObject.Register(id)
+    path = request.form.get('path')
+    RegistrationObject.Register(path)
     return "HERE"
     # aReturn = {'ResponseMessage': "SUCCESS"}
     # return json.dumps(aReturn)
