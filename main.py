@@ -177,13 +177,6 @@ class Detection:
         image = self.temp+'/'+img
         Detection = self.DetectFace(image)
         return Detection
-        if Detection == 'FACE_DETECTED':
-            return 2
-        elif Detection == 'FACE_NOT_DETECTED':
-            return 3
-        else:
-            self.user = Detection
-            return 1
 
     def checkUser(self):
         return self.user
