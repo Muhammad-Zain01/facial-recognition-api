@@ -54,8 +54,6 @@ class Registration:
         return True
 
     def removeDirs(self, path):
-        # myList = os.listdir(f'{self.root}/temp/{path}')
-        # for file_name in myList:
         f'{self.root}/temp/{path}'
         file_path = os.path.join(self.root, 'temp', path)
         if os.path.isdir(file_path):
