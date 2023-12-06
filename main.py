@@ -177,6 +177,3 @@ class Detection:
         image = self.temp+'/'+img
         Detection = self.DetectFace(image)
         return Detection
-
-    def checkUser(self):
-        return self.user
