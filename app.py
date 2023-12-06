@@ -6,7 +6,6 @@ import os
 from main import Registration
 from main import Detection
 import random
-import contants as ct
 
 model_name = 'models/TunnedModel.pickle'
 root_path = os.path.join(__file__, os.path.dirname(__file__))
