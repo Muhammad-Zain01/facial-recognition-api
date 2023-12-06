@@ -1,29 +1,31 @@
 import cv2
-import numpy as np 
+import numpy as np
 import face_recognition
 import os
 import pickle
+
 
 class Registration:
     def __init__(self, path, model_name):
         self.path = path
         self.modelName = model_name
+        self.root = os.path.join(__file__,  os.path.dirname(__file__))
         self.images = []
         self.image_labels = []
         self.classNames = []
         self.bModel = False
         self.encodedData = False
-        
+
     def checkModel(self):
-        if os.path.exists(self.modelName):
+        if os.path.exists(f'{self.root}/{self.modelName}'):
             self.bModel = True
-            with open(self.modelName, 'rb') as file:
+            with open(f'{self.root}/{self.modelName}', 'rb') as file:
                 self.encodedData = pickle.load(file)
- 
-    def getImages(self):
-        myList = os.listdir(self.path)
+
+    def getImages(self, path):
+        myList = os.listdir(f'{self.root}/{path}')
         for cls in myList:
-            curImg = cv2.imread(f'{self.path}/{cls}')
+            curImg = cv2.imread(f'{self.root}/{path}/{cls}')
             self.images.append(curImg)
             tarr = os.path.splitext(cls)[0].split('_')
             self.image_labels.append([tarr[0],tarr[1]])
@@ -56,38 +58,38 @@ class Registration:
             if os.path.isfile(file_path):
                 os.remove(file_path)
         return True
-    
+
     def modelUpdate(self, classNames, encodeListKnown):
         with open(self.modelName, 'wb') as file:
             pickle.dump([classNames, encodeListKnown], file)
-        
-    def Register(self):
+
+    def Register(self, path):
         self.checkModel()
-        self.getImages()
+        self.getImages(path)
         
         encodeListKnown = self.encodeit()
-        
         if self.bModel:
             oldClassNames = self.encodedData[0]
             oldFaceData = self.encodedData[1]
-            
+
             for names in self.classNames:
                 oldClassNames.append(names)
-        
+
             for facedata in encodeListKnown:
                 oldFaceData.append(facedata)
-            
+
             encodeListKnown = oldFaceData
             self.classNames = oldClassNames
-
-        with open(self.modelName, 'wb') as file:
-            pickle.dump([self.classNames, encodeListKnown], file)
         
-        self.Reset()
+        with open(f'{self.root}/{self.modelName}', 'wb') as file:
+            pickle.dump([self.classNames, encodeListKnown], file)
+
+        # self.Reset()
         return True
 
 class Attendence:
     def __init__(self, temp_path, modelName):
+        self.root = os.path.join(__file__,  os.path.dirname(__file__))
         self.attendencePath = temp_path
         self.modelName = modelName
         self.user = []
@@ -95,13 +97,16 @@ class Attendence:
         self.classNames = []
         self.encodeListKnown = []
 
-        if os.path.exists(self.modelName):
-            with open(self.modelName, 'rb') as file:
+        if os.path.exists(f'{self.root}/{self.modelName}'):
+            with open(f'{self.root}/{self.modelName}', 'rb') as file:
                 unpickler = pickle.Unpickler(file)
                 encoded = unpickler.load()
             self.error = 'Model Not Found'
             self.classNames = encoded[0]
             self.encodeListKnown = encoded[1]
+        
+        print(self.classNames)
+        print(self.encodeListKnown)
 
     def DetectFace(self, img):
         img = cv2.imread(img)
@@ -115,7 +120,7 @@ class Attendence:
             min_distance_index = np.argmin(distances)
             min_distance = distances[min_distance_index]
             threshold = 0.37 # 63% Accuracy
-            print(str(round((1 - float(min_distance)) * 100,2))+"% Accuracy") 
+            print(str(round((1 - float(min_distance)) * 100,2))+"% Accuracy")
             if min_distance <= threshold:
                 label = self.classNames[min_distance_index]
                 return label
@@ -123,7 +128,7 @@ class Attendence:
             return "FACE_DETECTED"
         else:
             return "FACE_NOT_DETECTED"
-    
+
     def FaceCam(self):
         facecam = cv2.VideoCapture(0)
         while True:
@@ -182,6 +187,6 @@ class Attendence:
         else:
             self.user = Detection
             return 1
-    
+
     def checkUser(self):
         return self.user
