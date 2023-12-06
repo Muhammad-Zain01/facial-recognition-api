@@ -112,15 +112,5 @@ def checkUser():
     sResponse = json.dumps(aResponse)
     return sResponse
 
-    
-    
- 
-        print("FACE NOT DETECTED")
-        ResponseCode = 400
-        ResponseMessage = 'Face Not Detected'
-        
-    aResponse = {"ResponseCode" : ResponseCode, "ResponseMessage": ResponseMessage, "data" : data}
-    return json.dumps(aResponse)
-
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8000)
