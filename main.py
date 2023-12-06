@@ -4,7 +4,8 @@ import face_recognition
 import os
 import pickle
 import shutil
-
+        
+        
 class Registration:
     def __init__(self, model_name):
         self.modelName = model_name
@@ -86,10 +87,10 @@ class Registration:
         self.Reset(path)
         return True
 
-class Attendence:
+class Detection:
     def __init__(self, temp_path, modelName):
         self.root = os.path.join(__file__,  os.path.dirname(__file__))
-        self.attendencePath = temp_path
+        self.temp = temp_path
         self.modelName = modelName
         self.user = []
         self.error = ''
@@ -104,9 +105,6 @@ class Attendence:
             self.classNames = encoded[0]
             self.encodeListKnown = encoded[1]
         
-        print(self.classNames)
-        print(self.encodeListKnown)
-
     def DetectFace(self, img):
         img = cv2.imread(img)
         test_image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -176,7 +174,7 @@ class Attendence:
         return cv2.destroyAllWindows
 
     def compareFaces(self, img):
-        image = self.attendencePath+'/'+img
+        image = self.temp+'/'+img
         Detection = self.DetectFace(image)
         return Detection
         if Detection == 'FACE_DETECTED':
