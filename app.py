@@ -12,7 +12,7 @@ import numpy as np
 modal = 'TunnedModel.pickle'
 path, attendence_path, model_name = ct.TEMP_PATH, ct.TEMP_ATTENDENCE_PATH, ct.MODEL_DIR+'/'+modal
 
-RegistrationObject = Registration(path, model_name)
+RegistrationObject = Registration(model_name)
 AttendenceObject = Attendence(attendence_path, model_name)
 root_path = os.path.join(__file__, os.path.dirname(__file__))
 temp_path = os.path.join(__file__, os.path.dirname(__file__))+"/temp"
@@ -22,7 +22,6 @@ if(not os.path.exists(f'{temp_path}')):
     
 if(not os.path.exists(f'{root_path}/{ct.MODEL_DIR}')):
     os.mkdir(f'{root_path}/{ct.MODEL_DIR}')
-# print(AttendenceObject.classNames)
 
 # RegistrationObject.Register()
 # AttendenceObject.FaceCam()
@@ -46,10 +45,6 @@ def get_user_index(arr, target):
 def remove_index(arr, remove_arr):
     data = [value for index, value in enumerate(arr) if index not in remove_arr]
     return data
-
-# @app.route('/')
-# def home():
-#     return render_template('Register.html')
 
 @app.route('/trained_users', methods=['GET'])
 def trained_users():
@@ -95,35 +90,14 @@ def Upload():
 def Register():
     path = request.form.get('path')
     RegistrationObject.Register(path)
-    return "HERE"
-    # aReturn = {'ResponseMessage': "SUCCESS"}
-    # return json.dumps(aReturn)
-
-@app.route('/image', methods=['POST'])
-def process_form_data():
-    # data = request.get_json()
-    # image_file = data.get('images')
-    # name = data.get('name')
-    # user_id = data.get('userId')
-        
-    # for i, image_data in enumerate(image_file):
-    #     image_position = image_data[0]
-    #     image_bytes = base64.b64decode(image_data[1])
-    #     with open(f'{path}/{name}_{image_position}_{user_id}.jpg', 'wb') as file:
-    #         file.write(image_bytes)
-  
-
-    RegistrationObject.Register()
-    
-    aResponse = {"ResponseCode" : "200", "ResponseMessage" : "Success"}
-    return json.dumps(aResponse)
-    
-
+    aReturn = {'Response': "SUCCESS"}
+    return json.dumps(aReturn)
 
 @app.route('/check-user', methods=['POST'])
-def checkUser():    
+def checkUser():
     image = request.form.get('img')
     image_name = 'check_user.jpeg'
+    
     with open(f'{attendence_path}/{image_name}', 'wb') as file:
         base64_string = image.split(',', 1)[-1]
         image_bytes = base64.b64decode(base64_string)
@@ -131,12 +105,14 @@ def checkUser():
         
     AttendenceObject = Attendence(attendence_path, model_name);
     bResult = AttendenceObject.compareFaces(image_name)
+    
     User = ""
     ResponseCode = 400
     ResponseMessage = ""
     Id = ''
     User = ''
     data = {}
+    
     if bResult == 1:
         if len(AttendenceObject.checkUser()) > 0:
             ResponseCode = 200
