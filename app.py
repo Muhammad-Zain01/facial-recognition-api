@@ -115,15 +115,7 @@ def checkUser():
 
    
     
-    if bResult == 1:
-        if len(AttendenceObject.checkUser()) > 0:
-            ResponseCode = 200
-            User = AttendenceObject.checkUser()[0]
-            Id = AttendenceObject.checkUser()[1]
-            data = {'EmployeeName' : User, "EmployeeId" : Id}
-        else:
-            ResponseCode = 400
-            ResponseMessage = 'User Not Found'
+    
     elif bResult == 2:
         print("user NOT DETECTED")
         ResponseCode = 400
