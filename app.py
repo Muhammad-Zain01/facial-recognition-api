@@ -76,7 +76,7 @@ def Upload():
     with open(f'{temp_path}/{id}/{name}_{id}{random_digit}.jpg', 'wb') as file:
         file.write(image)
     
-    return json.dumps({'Response' : "SUCCESS"})
+    return json.dumps({'Status' : 1})
     
 @app.route('/register', methods=['POST'])
 def Register():
@@ -84,7 +84,7 @@ def Register():
     RegistrationObject = Registration(model_name)
     RegistrationObject.Register(path)
 
-    aReturn = {'Response': "SUCCESS"}
+    aReturn = {'Status': 1}
     return json.dumps(aReturn)
 
 @app.route('/check', methods=['POST'])
