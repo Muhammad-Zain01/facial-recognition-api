@@ -20,47 +20,6 @@ if(not os.path.exists(f'{root_path}/{modelDir}')): os.mkdir(f'{root_path}/{model
 app = Flask(__name__)
 CORS(app, origins='*', supports_credentials=True, allow_headers=['Content-Type', 'Authorization'])
 
-# Helper Functions
-# def get_unique_values_with_counts(arr):
-#     unique_values, counts = np.unique(arr, return_counts=True)
-#     unique_counts = dict(zip(unique_values, counts))
-#     return unique_counts
-
-# def get_user_index(arr, target):
-#     index_arr = []
-#     for i in range(len(arr)):
-#         value = arr[i][1]
-#         if(str(value) == str(target)):
-#             index_arr.append(i)
-#     return index_arr
-
-# def remove_index(arr, remove_arr):
-#     data = [value for index, value in enumerate(arr) if index not in remove_arr]
-#     return data
-
-# @app.route('/trained_users', methods=['GET'])
-# def trained_users():
-#     AttendenceObject = Detection(temp_path2, model_name);
-#     trainedUsers = (AttendenceObject.classNames)
-#     array_2d = np.array([[1, 2, 3], [4, 2, 1], [3, 4, 2]])
-#     unique_counts = get_unique_values_with_counts(trainedUsers)
-#     trainedUsers = [x for i, x in enumerate(trainedUsers) if x not in trainedUsers[:i]]
-#     return render_template('trained_users.html', users=[trainedUsers, unique_counts])
-
-# @app.route('/remove_user', methods=['POST'])
-# def remove_user():
-#     data = request.get_json()
-#     id = data['id']
-#     AttendenceObject = Detection(temp_path2, model_name)
-#     Labels = AttendenceObject.classNames
-#     EncodedData = AttendenceObject.encodeListKnown
-#     index_to_remove = get_user_index(Labels, id)
-
-#     newLabels = remove_index(Labels, index_to_remove)
-#     newEncodings = remove_index(EncodedData, index_to_remove)
-#     RegistrationObject.modelUpdate(newLabels, newEncodings)
-#     return json.dumps({'Response' : "SUCCESS"})
-
 @app.route('/upload', methods=['POST'])
 def Upload():
     data = json.loads(request.form.get('data'))
@@ -69,7 +28,7 @@ def Upload():
     base64_string = data['img']
     img = base64_string.split(',', 1)[-1]
     image = base64.b64decode(img)
-    random_digit = random.randint(1, 100)
+    random_digit = random.randint(1, 1000000)
     if(not os.path.exists(f'{temp_path}/{id}')):
         os.mkdir(f'{temp_path}/{id}')
     
@@ -101,8 +60,8 @@ def checkUser():
     DetectionObject = Detection(temp_path2, model_name);
     bResult = DetectionObject.compareFaces(image_name)
     
-    if(bResult): aResponse = {"Response" : "SUCCESS", "user" : bResult}
-    else: aResponse = {"Response" : "NOT_FOUND"}
+    if(bResult): aResponse = {"Status" : 1, "user" : bResult}
+    else: aResponse = {"Status" : 0}
     
     sResponse = json.dumps(aResponse)
     return sResponse
