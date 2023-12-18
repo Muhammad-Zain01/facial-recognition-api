@@ -36,7 +36,12 @@ def Upload():
         file.write(image)
     
     return json.dumps({'Status' : 1})
-    
+ 
+@app.route('/', methods=['GET'])
+def Home():
+    aReturn = {'Status': 200, 'Message': "Flask Server is Running"}
+    return json.dumps(aReturn)
+   
 @app.route('/register', methods=['POST'])
 def Register():
     path = request.form.get('path')

@@ -59,7 +59,7 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    git clone https://github.com/muhammad-zain01/facial-recognition-api.git
    ```
-2. Install NPM packages
+2. Install pip libraries
    ```sh
     cd facial-recognition-api
     pip install -r requirements.txt
