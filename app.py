@@ -51,8 +51,8 @@ def checkUser():
     image = request.form.get('img')
     num = random.randint(1, 10000)
     image_name = f'{num}.jpeg'
-    
-    with open(f'{temp_path2}/{image_name}', 'wb') as file:
+    imagePath = f'{temp_path2}/{image_name}'
+    with open(imagePath, 'wb') as file:
         base64_string = image.split(',', 1)[-1]
         image_bytes = base64.b64decode(base64_string)
         file.write(image_bytes)
@@ -62,7 +62,8 @@ def checkUser():
     
     if(bResult): aResponse = {"Status" : 1, "user" : bResult}
     else: aResponse = {"Status" : 0}
-    
+     
+    if(os.path.exists(imagePath)): os.remove(imagePath)
     sResponse = json.dumps(aResponse)
     return sResponse
 
