@@ -15,7 +15,7 @@
     <a href="https://github.com/muhammad-zain01/facial-recognition-api"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://url-shortr.vercel.app/">View Demo</a>
+    <a href="https://facial-recognitionapp.vercel.app/">View Demo</a>
     -
     <a href="https://github.com/Muhammad-Zain01/facial-recognition-client/">Frontend Repo</a>
     <br />
@@ -24,8 +24,7 @@
 </div>
 
 
-[![Product Name Screen Shot][product-screenshot]](https://url-shortr.vercel.app/)
-[![Product Name Screen Shot][product-screenshot2]](https://url-shortr.vercel.app/)
+[![Product Name Screen Shot][product-screenshot]](https://facial-recognitionapp.vercel.app/)
 
 ## Key Features
 ### User Registration: 
@@ -97,8 +96,7 @@ Don't forget to give the project a star! Thanks again!
 [license-url]: https://github.com/muhammad-zain01/facial-recognition-api/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: https://raw.githubusercontent.com/Muhammad-Zain01/facial-recognition-api/main/preview.png
-[product-screenshot2]: https://raw.githubusercontent.com/Muhammad-Zain01/facial-recognition-client/main/preview2.png
+[product-screenshot]: https://raw.githubusercontent.com/Muhammad-Zain01/facial-recognition-client/main/preview.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 
 [Express.js]: https://img.shields.io/badge/express.js-f1dd1c?style=for-the-badge
